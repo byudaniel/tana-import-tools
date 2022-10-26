@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { RoamConverter } from './converters/roam/index';
 import { TanaIntermediateFile } from './types/types';
 import { WorkflowyConverter } from './converters/workflowy';
+import { SlackConverter } from './converters/slack';
 
 const fileType = process.argv[2];
 const file = process.argv[3];
@@ -35,13 +36,16 @@ function saveFile(fileName: string, tanaIntermediteNodes: TanaIntermediateFile) 
   console.log(`Tana Intermediate Nodes written to : ${targetFileName}`);
 }
 
-let tanaIntermediteFile = undefined;
+let tanaIntermediteFile: TanaIntermediateFile | undefined = undefined;
 switch (fileType) {
   case 'roam':
     tanaIntermediteFile = new RoamConverter().convert(contents);
     break;
   case 'workflowy':
     tanaIntermediteFile = new WorkflowyConverter().convert(contents);
+    break;
+  case 'slack':
+    tanaIntermediteFile = SlackConverter.convert(contents);
     break;
   default:
     console.log(`File type ${fileType} is not supported`);
